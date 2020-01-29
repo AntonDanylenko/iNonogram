@@ -25,8 +25,8 @@ function newGame(){
   var counts = document.getElementById("puzzle").innerHTML.split("|");
   columns = countToArray(counts[0]);
   rows = countToArray(counts[1]);
-  console.log(columns);
-  console.log(rows);
+  // console.log(columns);
+  // console.log(rows);
   cols_width = getLongest(columns);
   rows_width = getLongest(rows);
   full_height = cols_width + rows.length;
@@ -42,10 +42,10 @@ function newGame(){
   boardEl.height = full_height*square_size;
   // boardEl.style.margin = "auto";
   // boardEl.style.border = "6px solid #000000";
-  console.log(canvas.width);
-  console.log(canvas.height);
-  console.log(boardEl.width);
-  console.log(boardEl.height);
+  // console.log(canvas.width);
+  // console.log(canvas.height);
+  // console.log(boardEl.width);
+  // console.log(boardEl.height);
   unlocked = true;
   timer = 0;
   clearTimeout(t);
@@ -219,15 +219,14 @@ function getLongest(array){
 
 function placePermNum(num, cell, index, nums_length, type){
   /* places a number into nonogram board */
-  var x_divisor = ((type) ? full_width : full_height);
-  var y_divisor = ((type) ? full_height : full_width);
   var offset = ((type) ? (rows_width-nums_length)*(canvas.width/full_width) : (cols_width-nums_length)*(canvas.height/full_height));
-  // console.log("" + num + ", " + index)
-  var sectorX = ((type) ? offset+Math.floor(index*canvas.width/x_divisor) : Math.floor(cell*canvas.width/x_divisor));
-  var sectorY = ((type) ? Math.floor(cell*canvas.height/y_divisor) : offset+Math.floor(index*canvas.height/y_divisor));
-  console.log("" + sectorX + ", " + sectorY);
+  var sub_offset = Math.floor(canvas.width/(full_width*5))
+  // console.log(sub_offset);
+  var sectorX = ((type) ? offset+Math.floor(index*canvas.width/full_width)+sub_offset : Math.floor(cell*canvas.width/full_width)+sub_offset);
+  var sectorY = ((type) ? Math.floor(cell*canvas.height/full_height)-sub_offset : offset+Math.floor(index*canvas.height/full_height)-sub_offset);
+  // console.log("" + sectorX + ", " + sectorY);
 
-  context.font = (Math.floor(canvas.height/full_height)).toString() + 'px Arial';
+  context.font = (Math.floor(canvas.height/full_height)-sub_offset).toString() + 'px Arial';
   context.fillStyle = 'black';
   context.fillText(num, sectorX, sectorY+(canvas.height/full_height));
 }
