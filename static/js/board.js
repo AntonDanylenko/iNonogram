@@ -37,9 +37,10 @@ function newGame(){
   }
   canvas.width = full_width*square_size;
   canvas.height = full_height*square_size;
-  var boardEl = document.getElementById("board");
-  boardEl.width = full_width*square_size;
-  boardEl.height = full_height*square_size;
+  canvas.style.border = "6px solid #000000";
+  // var boardEl = document.getElementById("board");
+  // boardEl.width = full_width*square_size;
+  // boardEl.height = full_height*square_size;
   // boardEl.style.margin = "auto";
   // boardEl.style.border = "6px solid #000000";
   // console.log(canvas.width);
@@ -64,24 +65,23 @@ function setupBoard(){
   // console.log(cur_board);
   context.clearRect(0,0,canvas.width,canvas.height);
   placeNonogram();
-  // context.strokeStyle = 'black';
-  // for(var i=1; i<9; i++){
-  //   // console.log("i: ", i);
-  //   if(i==3 || i==6){
-  //     context.lineWidth = 5;
-  //   }
-  //   else{
-  //     context.lineWidth = 1;
-  //   }
-  //   context.beginPath();
-  //   context.moveTo(i*context.canvas.width/9, 0);
-  //   context.lineTo(i*context.canvas.width/9, context.canvas.height);
-  //   context.stroke();
-  //   context.beginPath();
-  //   context.moveTo(0, i*context.canvas.height/9);
-  //   context.lineTo(context.canvas.width, i*context.canvas.height/9);
-  //   context.stroke();
-  // }
+  context.strokeStyle = 'black';
+
+  for (var i=rows_width; i<full_width; i++){
+    // console.log("i: ", i);
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(i*canvas.width/full_width, 0);
+    context.lineTo(i*canvas.width/full_width, canvas.height);
+    context.stroke();
+  }
+  for (var i=cols_width; i<full_height; i++){
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(0, i*canvas.height/full_height);
+    context.lineTo(canvas.width, i*canvas.height/full_height);
+    context.stroke();
+  }
 }
 
 // window.addEventListener('focus', startTimer);
@@ -220,7 +220,7 @@ function getLongest(array){
 function placePermNum(num, cell, index, nums_length, type){
   /* places a number into nonogram board */
   var offset = ((type) ? (rows_width-nums_length)*(canvas.width/full_width) : (cols_width-nums_length)*(canvas.height/full_height));
-  var sub_offset = Math.floor(canvas.width/(full_width*5))
+  var sub_offset = Math.floor(canvas.width/(full_width*4))
   // console.log(sub_offset);
   var sectorX = ((type) ? offset+Math.floor(index*canvas.width/full_width)+sub_offset : Math.floor(cell*canvas.width/full_width)+sub_offset);
   var sectorY = ((type) ? Math.floor(cell*canvas.height/full_height)-sub_offset : offset+Math.floor(index*canvas.height/full_height)-sub_offset);
