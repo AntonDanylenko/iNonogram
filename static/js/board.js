@@ -70,6 +70,9 @@ function setupBoard(){
   for (var i=rows_width; i<full_width; i++){
     // console.log("i: ", i);
     context.lineWidth = 1;
+    if ((i-rows_width)%5==0){
+      context.lineWidth = 3;
+    }
     context.beginPath();
     context.moveTo(i*canvas.width/full_width, 0);
     context.lineTo(i*canvas.width/full_width, canvas.height);
@@ -77,6 +80,9 @@ function setupBoard(){
   }
   for (var i=cols_width; i<full_height; i++){
     context.lineWidth = 1;
+    if ((i-cols_width)%5==0){
+      context.lineWidth = 3;
+    }
     context.beginPath();
     context.moveTo(0, i*canvas.height/full_height);
     context.lineTo(canvas.width, i*canvas.height/full_height);

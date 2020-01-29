@@ -13,12 +13,13 @@ header {
   margin-right: auto;
   width: auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   padding: 10px;
 }
 
 #settings {
-  width: 132px;
+  width: auto;
+  padding: 0px 5px;
   display: flex;
   justify-content: space-between;
 }
