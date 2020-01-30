@@ -38,15 +38,6 @@ function newGame(){
   canvas.width = full_width*square_size;
   canvas.height = full_height*square_size;
   canvas.style.border = "6px solid #000000";
-  // var boardEl = document.getElementById("board");
-  // boardEl.width = full_width*square_size;
-  // boardEl.height = full_height*square_size;
-  // boardEl.style.margin = "auto";
-  // boardEl.style.border = "6px solid #000000";
-  // console.log(canvas.width);
-  // console.log(canvas.height);
-  // console.log(boardEl.width);
-  // console.log(boardEl.height);
   unlocked = true;
   timer = 0;
   clearTimeout(t);
@@ -93,98 +84,97 @@ function setupBoard(){
 // window.addEventListener('focus', startTimer);
 // window.addEventListener('blur', pauseTimer);
 
-// document.addEventListener('click', function(event) {
-//   /* Determines what to do when user clicks inside the board */
-//   // console.log("CLICK EVENT");
-//   var rect = canvas.getBoundingClientRect(canvas, event);
-//   var mousePos = [event.clientX - rect.left, event.clientY - rect.top];
-//   // console.log(mousePos);
-//   if (mousePos[0]>=0 && mousePos[1]>=0 &&
-//       mousePos[0]<=canvas.width && mousePos[1]<=canvas.height &&
-//       unlocked){
-//     var sectorX = findSector(mousePos[0], canvas.width);
-//     var sectorY = findSector(mousePos[1], canvas.height);
-//     // console.log("selected: "+selected)
-//     // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
-//     if (selected && selected[0]==sectorX && selected[1]==sectorY) {
-//       unselectSquare(selected[0], selected[1]);
-//     } else if (selected) {
-//       unselectSquare(selected[0], selected[1]);
-//       selectSquare(mousePos[0], mousePos[1]);
-//     } else {
-//       selectSquare(mousePos[0], mousePos[1]);
-//     }
-//   }
-//   else if (selected && unlocked){
-//     unselectSquare(selected[0], selected[1]);
-//   }
-// }, false);
+document.addEventListener('click', function(event) {
+  /* Determines what to do when user clicks inside the board */
+  // console.log("CLICK EVENT");
+  var rect = canvas.getBoundingClientRect(canvas, event);
+  var mousePos = [event.clientX - rect.left, event.clientY - rect.top];
+  // console.log(mousePos);
+  if (mousePos[0]>=(rows_width*canvas.width/full_width) && mousePos[1]>=(cols_width*canvas.height/full_height) &&
+      mousePos[0]<=canvas.width && mousePos[1]<=canvas.height &&
+      unlocked){
+    var sectorX = findSector(mousePos[0], canvas.width);
+    var sectorY = findSector(mousePos[1], canvas.height);
+    // console.log("selected: "+selected)
+    // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
+    if (selected && selected[0]==sectorX && selected[1]==sectorY) {
+      unselectSquare(selected[0], selected[1]);
+    } else if (selected) {
+      unselectSquare(selected[0], selected[1]);
+      selectSquare(mousePos[0], mousePos[1]);
+    } else {
+      selectSquare(mousePos[0], mousePos[1]);
+    }
+  }
+  else if (selected && unlocked){
+    unselectSquare(selected[0], selected[1]);
+  }
+}, false);
 
-// document.addEventListener('keydown', function(event) {
-//   /* If a square is selected and the user presses a number
-//      from 1 to 9, the number is placed in that square.
-//      If the user presses any of the arrow keys,
-//      the selected square is changed. */
-//   // console.log"KEYPRESS EVENT");
-//   key = event.keyCode;
-//   // console.log("Key: " + key);
-//   num = parseInt(String.fromCharCode(key));
-//   // console.log("Num: " + num);
-//   // console.log("isNum? "+([1,2,3,4,5,6,7,8,9].includes(num)));
-//   if (selected && unlocked){
-//     var index = (selected[1]*9/canvas.height)*9 + selected[0]*9/canvas.width;
-//     // console.log("Index: " + index);
-//     if (37<=key && key<=40){
-//       moveSelected(canvas, key);
-//     }
-//     else if (key==8){
-//       if (cur_board[index]=='_') {
-//         clearPencilCell(selected[0], selected[1]);
-//       }
-//       else {
-//         clearCell(selected[0], selected[1]);
-//       }
-//     }
-//     else if ([1,2,3,4,5,6,7,8,9].includes(num)) {
-//       if (init_board[index]=='_'){
-//         if (utensil){
-//           // console.log("debug: " + pencil_board[index][num-1]);
-//           if (cur_board[index]!='_') {
-//             clearCell(selected[0],selected[1]);
-//             pencilFullCell(selected[0],selected[1]);
-//           }
-//           if (num==pencil_board[index][num-1]){
-//             clearPencil(num, selected[0], selected[1]);
-//           }
-//           else {
-//             pencilNumber(num, selected[0], selected[1]);
-//           }
-//         }
-//         else {
-//           if (num==cur_board[index]){
-//             clearCell(selected[0], selected[1]);
-//           }
-//           else {
-//             writeNumber(num, selected[0], selected[1], error_cells=checkCell(num, index));
-//             if (checkWin()){
-//               winTime();
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-//   if (key==32 && unlocked){
-//     // console.log("!utensil: " + !utensil);
-//     switchUtensil(!utensil);
-//   }
-//   else if (key==27) {
-//     if (selected) {
-//       unselectSquare(selected[0],selected[1]);
-//     }
-//     checkPause();
-//   }
-// }, false);
+document.addEventListener('keydown', function(event) {
+  /* If a square is selected and the user presses a number
+     from 1 to 9, the number is placed in that square.
+     If the user presses any of the arrow keys,
+     the selected square is changed. */
+  // console.log"KEYPRESS EVENT");
+  key = event.keyCode;
+  // console.log("Key: " + key);
+  num = parseInt(String.fromCharCode(key));
+  // console.log("Num: " + num);
+  // console.log("isNum? "+([1,2,3,4,5,6,7,8,9].includes(num)));
+  if (selected && unlocked){
+    // console.log("Index: " + index);
+    if (37<=key && key<=40){
+      moveSelected(canvas, key);
+    }
+    // else if (key==8){
+    //   if (cur_board[index]=='_') {
+    //     clearPencilCell(selected[0], selected[1]);
+    //   }
+    //   else {
+    //     clearCell(selected[0], selected[1]);
+    //   }
+    // }
+    // else if ([1,2,3,4,5,6,7,8,9].includes(num)) {
+    //   if (init_board[index]=='_'){
+    //     if (utensil){
+    //       // console.log("debug: " + pencil_board[index][num-1]);
+    //       if (cur_board[index]!='_') {
+    //         clearCell(selected[0],selected[1]);
+    //         pencilFullCell(selected[0],selected[1]);
+    //       }
+    //       if (num==pencil_board[index][num-1]){
+    //         clearPencil(num, selected[0], selected[1]);
+    //       }
+    //       else {
+    //         pencilNumber(num, selected[0], selected[1]);
+    //       }
+    //     }
+    //     else {
+    //       if (num==cur_board[index]){
+    //         clearCell(selected[0], selected[1]);
+    //       }
+    //       else {
+    //         writeNumber(num, selected[0], selected[1], error_cells=checkCell(num, index));
+    //         if (checkWin()){
+    //           winTime();
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+  }
+  // if (key==32 && unlocked){
+  //   // console.log("!utensil: " + !utensil);
+  //   switchUtensil(!utensil);
+  // }
+  else if (key==27) {
+    if (selected) {
+      unselectSquare(selected[0],selected[1]);
+    }
+    checkPause();
+  }
+}, false);
 
 
 
@@ -256,19 +246,19 @@ function placeNonogram(){
   }
 }
 
-function placeAll() {
-  // console.log("PLACE ALL");
-  for (var i=0; i<81; i++) {
-    x = getX(i);
-    y = getY(i);
-    if (cur_board[i]!='_' && init_board[i]=='_') {
-      writeNumber(cur_board[i], x, y, checkCell(cur_board[i], i));
-    }
-    else {
-      pencilFullCell(x, y);
-    }
-  }
-}
+// function placeAll() {
+//   // console.log("PLACE ALL");
+//   for (var i=0; i<81; i++) {
+//     x = getX(i);
+//     y = getY(i);
+//     if (cur_board[i]!='_' && init_board[i]=='_') {
+//       writeNumber(cur_board[i], x, y, checkCell(cur_board[i], i));
+//     }
+//     else {
+//       pencilFullCell(x, y);
+//     }
+//   }
+// }
 
 function findSector(coord, total, divisor) {
   /* Determines which square the coordinate belongs too */
@@ -296,79 +286,77 @@ function clearCell(x, y) {
   cur_board[index] = '_';
 }
 
-function pencilNumber(num, x, y) {
-  // console.log("PENCIL NUMBER");
-  var sectorX = findSector(x, canvas.width);
-  var sectorY = findSector(y, canvas.height);
-  var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-  context.font = '15px Arial';
-  context.fillStyle = 'black';
-  context.fillText(num, sectorX+10+20*((num-1)%3), sectorY+20+18*Math.floor((num-1)/3));
-  pencil_board[index][num-1] = num;
-}
+// function pencilNumber(num, x, y) {
+//   // console.log("PENCIL NUMBER");
+//   var sectorX = findSector(x, canvas.width);
+//   var sectorY = findSector(y, canvas.height);
+//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
+//   context.font = '15px Arial';
+//   context.fillStyle = 'black';
+//   context.fillText(num, sectorX+10+20*((num-1)%3), sectorY+20+18*Math.floor((num-1)/3));
+//   pencil_board[index][num-1] = num;
+// }
 
-function clearPencil (number, x, y) {
-  // console.log("CLEAR PENCIL");
-  var sectorX = findSector(x, canvas.width);
-  var sectorY = findSector(y, canvas.height);
-  var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-  context.clearRect(sectorX+10+20*((num-1)%3), sectorY+9+18*Math.floor((num-1)/3), 8, 12);
-  pencil_board[index][num-1] = '_';
-}
+// function clearPencil (number, x, y) {
+//   // console.log("CLEAR PENCIL");
+//   var sectorX = findSector(x, canvas.width);
+//   var sectorY = findSector(y, canvas.height);
+//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
+//   context.clearRect(sectorX+10+20*((num-1)%3), sectorY+9+18*Math.floor((num-1)/3), 8, 12);
+//   pencil_board[index][num-1] = '_';
+// }
 
-function pencilFullCell (x, y) {
-  // console.log("PENCIL FULL CELL");
-  var sectorX = findSector(x, canvas.width);
-  var sectorY = findSector(y, canvas.height);
-  var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-  for (var i=0; i<9; i++) {
-    if (pencil_board[index][i]!='_') {
-      pencilNumber(i+1, x, y);
-    }
-  }
-}
+// function pencilFullCell (x, y) {
+//   // console.log("PENCIL FULL CELL");
+//   var sectorX = findSector(x, canvas.width);
+//   var sectorY = findSector(y, canvas.height);
+//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
+//   for (var i=0; i<9; i++) {
+//     if (pencil_board[index][i]!='_') {
+//       pencilNumber(i+1, x, y);
+//     }
+//   }
+// }
 
-function clearPencilCell (x, y) {
-  // console.log("CLEAR PENCIL CELL");
-  var sectorX = findSector(x, canvas.width);
-  var sectorY = findSector(y, canvas.height);
-  var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-  context.clearRect(sectorX+9, sectorY+9, canvas.width/9-18, canvas.height/9-18);
-  for (var i=0; i<9; i++) {
-    pencil_board[index][i]='_'
-  }
-}
+// function clearPencilCell (x, y) {
+//   // console.log("CLEAR PENCIL CELL");
+//   var sectorX = findSector(x, canvas.width);
+//   var sectorY = findSector(y, canvas.height);
+//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
+//   context.clearRect(sectorX+9, sectorY+9, canvas.width/9-18, canvas.height/9-18);
+//   for (var i=0; i<9; i++) {
+//     pencil_board[index][i]='_'
+//   }
+// }
 
 function selectSquare(x, y) {
   /* Selects the square that coresponds to the
      given x and y coordinates and outlines it */
   // console.log("SELECT SQUARE");
-  var sectorX = findSector(x, canvas.width);
-  var sectorY = findSector(y, canvas.height);
-  var offset = 6;
+  var sectorX = findSector(x, canvas.width, full_width);
+  var sectorY = findSector(y, canvas.height, full_height);
+  var sub_offset = Math.floor(canvas.width/(full_width*6));
   // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
-  context.lineWidth = 5;
+  context.lineWidth = 3;
   context.strokeStyle = "#50AEEE";
-  context.strokeRect(sectorX+offset, sectorY+offset, canvas.width/9-2*offset, canvas.height/9-2*offset);
+  context.strokeRect(sectorX+sub_offset, sectorY+sub_offset, canvas.width/full_width-2*sub_offset, canvas.height/full_height-2*sub_offset);
   selected = [sectorX, sectorY];
 }
 
 function unselectSquare(x, y) {
   /* Unselects the square and removes outline */
   // console.log("UNSELECT SQUARE");
-  var sectorX = findSector(x, canvas.width);
-  var sectorY = findSector(y, canvas.height);
+  var sectorX = findSector(x, canvas.width, full_width);
+  var sectorY = findSector(y, canvas.height, full_height);
   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
+  var sub_offset = Math.floor(canvas.width/(full_width*8));
   // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
   // console.log("Index: " + index)
   context.fillStyle = 'white';
-  if (init_board[index]!='_'){
-    context.fillStyle = 'lightgrey';
-  }
-  context.fillRect(sectorX+3, sectorY+3, canvas.width/9-6, 6);
-  context.fillRect(sectorX+3, sectorY+3, 6, canvas.height/9-6);
-  context.fillRect(sectorX+3, sectorY+canvas.height/9-9, canvas.width/9-6, 6);
-  context.fillRect(sectorX+canvas.width/9-9, sectorY+3, 6, canvas.height/9-6);
+  context.fillRect(sectorX+sub_offset, sectorY+sub_offset, canvas.width/full_width-2*sub_offset, 2*sub_offset);
+  context.fillRect(sectorX+sub_offset, sectorY+sub_offset, 2*sub_offset, canvas.height/full_height-2*sub_offset);
+  context.fillRect(sectorX+sub_offset, sectorY+canvas.height/full_height-3*sub_offset, canvas.width/full_width-2*sub_offset, 2*sub_offset);
+  context.fillRect(sectorX+canvas.width/full_width-3*sub_offset, sectorY+sub_offset, 2*sub_offset, canvas.height/full_height-2*sub_offset);
   // context.clearRect(sectorX+3, sectorY+3, canvas.width/9-6, canvas.height/9-6);
   selected = null;
 }
@@ -380,37 +368,39 @@ function moveSelected(canvas, key) {
   var context = canvas.getContext('2d');
   curX = selected[0];
   curY = selected[1];
+  // console.log(curX);
+  // console.log(curY);
   unselectSquare(selected[0], selected[1]);
   if (key==37){ // left arrow
-    if (curX!=0) {
-      curX-=canvas.width/9;
+    if (curX>rows_width*canvas.width/full_width) {
+      curX-=canvas.width/full_width;
     }
     else {
-      curX=canvas.width*8/9;
+      curX=canvas.width-(canvas.width/full_width);
     }
   }
   else if (key==38){ // up arrow
-    if (curY!=0) {
-      curY-=canvas.height/9;
+    if (curY>cols_width*canvas.height/full_height) {
+      curY-=canvas.height/full_height;
     }
     else {
-      curY=canvas.height*8/9;
+      curY=canvas.height-(canvas.height/full_height);
     }
   }
   else if (key==39){ // right arrow
-    if (curX!=canvas.width*8/9) {
-      curX+=canvas.width/9;
+    if (curX!=canvas.width-(canvas.width/full_width)) {
+      curX+=canvas.width/full_width;
     }
     else {
-      curX=0;
+      curX=cols_width*canvas.width/full_width;
     }
   }
   else if (key==40){ // down arrow
-    if (curY!=canvas.height*8/9) {
-      curY+=canvas.height/9;
+    if (curY!=canvas.height-(canvas.height/full_height)) {
+      curY+=canvas.height/full_height;
     }
     else {
-      curY=0;
+      curY=rows_width*canvas.height/full_height;
     }
   }
   selectSquare(curX, curY);
