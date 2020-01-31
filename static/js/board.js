@@ -11,6 +11,7 @@ var full_height;
 var full_width;
 var cur_board = [];
 var unlocked = true;
+var utensil = 3;
 
 var timer;
 var t;
@@ -203,10 +204,10 @@ document.addEventListener('keydown', function(event) {
     //   }
     // }
   }
-  // if (key==32 && unlocked){
-  //   // console.log("!utensil: " + !utensil);
-  //   switchUtensil(!utensil);
-  // }
+  if (key==32 && unlocked){
+    // console.log("!utensil: " + !utensil);
+    switchUtensil(utensil);
+  }
   else if (key==27) {
     if (selected) {
       unselectSquare(selected[0],selected[1]);
@@ -335,8 +336,8 @@ function fillCell(sectorX, sectorY, type){
 function clearCell(x, y) {
   /* Clears the cell at coordinates x, y */
   // console.log("CLEAR CELL");
-  var index_x = selected[0]*full_width/canvas.width-rows_width;
-  var index_y = selected[1]*full_height/canvas.height-cols_width;
+  var index_x = x*full_width/canvas.width-rows_width;
+  var index_y = y*full_height/canvas.height-cols_width;
   // console.log("" + sectorX + ", " + sectorY)
   context.clearRect(x+1, y+1, canvas.width/full_width-2, canvas.height/full_height-2);
   cur_board[index_y][index_x] = '_';
@@ -361,48 +362,8 @@ function clearCell(x, y) {
   }
 }
 
-// function pencilNumber(num, x, y) {
-//   // console.log("PENCIL NUMBER");
-//   var sectorX = findSector(x, canvas.width);
-//   var sectorY = findSector(y, canvas.height);
-//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-//   context.font = '15px Arial';
-//   context.fillStyle = 'black';
-//   context.fillText(num, sectorX+10+20*((num-1)%3), sectorY+20+18*Math.floor((num-1)/3));
-//   pencil_board[index][num-1] = num;
-// }
 
-// function clearPencil (number, x, y) {
-//   // console.log("CLEAR PENCIL");
-//   var sectorX = findSector(x, canvas.width);
-//   var sectorY = findSector(y, canvas.height);
-//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-//   context.clearRect(sectorX+10+20*((num-1)%3), sectorY+9+18*Math.floor((num-1)/3), 8, 12);
-//   pencil_board[index][num-1] = '_';
-// }
 
-// function pencilFullCell (x, y) {
-//   // console.log("PENCIL FULL CELL");
-//   var sectorX = findSector(x, canvas.width);
-//   var sectorY = findSector(y, canvas.height);
-//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-//   for (var i=0; i<9; i++) {
-//     if (pencil_board[index][i]!='_') {
-//       pencilNumber(i+1, x, y);
-//     }
-//   }
-// }
-
-// function clearPencilCell (x, y) {
-//   // console.log("CLEAR PENCIL CELL");
-//   var sectorX = findSector(x, canvas.width);
-//   var sectorY = findSector(y, canvas.height);
-//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-//   context.clearRect(sectorX+9, sectorY+9, canvas.width/9-18, canvas.height/9-18);
-//   for (var i=0; i<9; i++) {
-//     pencil_board[index][i]='_'
-//   }
-// }
 
 function selectSquare(x, y) {
   /* Selects the square that coresponds to the
@@ -411,13 +372,28 @@ function selectSquare(x, y) {
   var sectorX = findSector(x, canvas.width, full_width);
   var sectorY = findSector(y, canvas.height, full_height);
   var sub_offset = Math.floor(canvas.width/(full_width*6));
+  var index_x = sectorX*full_width/canvas.width-rows_width;
+  var index_y = sectorY*full_height/canvas.height-cols_width;
 
   // console.log("x: " + x + ", y: " + y);
   // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
-  context.lineWidth = 3;
-  context.strokeStyle = "#50AEEE";
-  context.strokeRect(sectorX+sub_offset, sectorY+sub_offset, canvas.width/full_width-2*sub_offset, canvas.height/full_height-2*sub_offset);
-  selected = [sectorX, sectorY];
+  if (utensil==0){
+    clearCell(sectorX, sectorY);
+  }
+  else if (utensil==1){
+    fillCell(sectorX, sectorY, "X");
+    cur_board[index_y][index_x] = "X";
+  }
+  else if (utensil==2){
+    fillCell(sectorX, sectorY, "*");
+    cur_board[index_y][index_x] = "*";
+  }
+  else if (utensil==3){
+    context.lineWidth = 3;
+    context.strokeStyle = "#50AEEE";
+    context.strokeRect(sectorX+sub_offset, sectorY+sub_offset, canvas.width/full_width-2*sub_offset, canvas.height/full_height-2*sub_offset);
+    selected = [sectorX, sectorY];
+  }
 }
 
 function unselectSquare(x, y) {
@@ -426,12 +402,12 @@ function unselectSquare(x, y) {
   var sectorX = findSector(x, canvas.width, full_width);
   var sectorY = findSector(y, canvas.height, full_height);
   var sub_offset = Math.floor(canvas.width/(full_width*8));
-  var index_x = selected[0]*full_width/canvas.width-rows_width;
-  var index_y = selected[1]*full_height/canvas.height-cols_width;
+  var index_x = sectorX*full_width/canvas.width-rows_width;
+  var index_y = sectorY*full_height/canvas.height-cols_width;
   // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
   // console.log("Index: " + index)
   context.clearRect(x+1, y+1, canvas.width/full_width-2, canvas.height/full_height-2);
-  fillCell(selected[0], selected[1], cur_board[index_y][index_x]);
+  fillCell(sectorX, sectorY, cur_board[index_y][index_x]);
   selected = null;
   for (var i=rows_width; i<full_width; i+=5){
     // console.log("i: ", i);
@@ -563,15 +539,33 @@ function addZeros(i){
 
 function switchUtensil(button) {
   /* Swith utensil depending on what button user clicks */
-  if (button==1) {
-    utensil=1; // pencil
-    document.getElementById("pen").className = "";
+  if (button==0) {
+    utensil=1; // x
+    document.getElementById("erase").className = "";
+    document.getElementById("x").className = "active";
+    document.getElementById("pencil").className = "";
+    document.getElementById("pointer").className = "";
+  }
+  else if (button==1) {
+    utensil=2; //pencil
+    document.getElementById("erase").className = "";
+    document.getElementById("x").className = "";
     document.getElementById("pencil").className = "active";
+    document.getElementById("pointer").className = "";
+  }
+  else if (button==2) {
+    utensil=3; // pointer
+    document.getElementById("erase").className = "";
+    document.getElementById("x").className = "";
+    document.getElementById("pencil").className = "";
+    document.getElementById("pointer").className = "active";
   }
   else {
-    utensil=0; // pen
+    utensil=0; // eraser
+    document.getElementById("erase").className = "active";
+    document.getElementById("x").className = "";
     document.getElementById("pencil").className = "";
-    document.getElementById("pen").className = "active";
+    document.getElementById("pointer").className = "";
   }
 }
 

@@ -17,6 +17,10 @@ header {
   padding: 10px;
 }
 
+#pause {
+  padding: 0px 5px;
+}
+
 #settings {
   width: auto;
   padding: 0px 5px;

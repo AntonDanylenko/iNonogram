@@ -11,17 +11,23 @@
     <header>iNonogram</header>
     <div class="navbar">
       <div id="settings">
-        <a href="" onclick="return false;">
+        <a id="pause" href="" onclick="return false;">
           <img src="static/img/pause.svg" alt="Pause" onclick="checkPause()">
         </a>
-        <!-- <div id="utensils">
-          <a class="active" id="pen" href="" onclick="return false;">
-            <img src="static/img/pen.svg" alt="Pen" onclick="switchUtensil(0)">
+        <div id="utensils">
+          <a id="erase" href="" onclick="return false;">
+            <img src="static/img/clean.svg" alt="eraser" onclick="switchUtensil(3)">
+          </a>
+          <a id="x" href="" onclick="return false;">
+            <img src="static/img/x.svg" alt="x" onclick="switchUtensil(0)">
           </a>
           <a id="pencil" href="" onclick="return false;">
-            <img src="static/img/pencil.svg" alt="Pencil" onclick="switchUtensil(1)">
+            <img src="static/img/pencil.svg" alt="fill" onclick="switchUtensil(1)">
           </a>
-        </div> -->
+          <a class="active" id="pointer" href="" onclick="return false;">
+            <img src="static/img/cursor.svg" alt="selector" onclick="switchUtensil(2)">
+          </a>
+        </div>
       </div>
       <!-- <div id="difficulty">
         <ul>
