@@ -150,16 +150,28 @@ document.addEventListener('keydown', function(event) {
       selectSquare(selected[0], selected[1]);
     }
     else if (key==83){
-      clearCell(selected[0], selected[1]);
-      fillCell(selected[0], selected[1], "*");
-      cur_board[index_y][index_x] = "*";
-      selectSquare(selected[0], selected[1]);
+      if (cur_board[index_y][index_x] == "*"){
+        clearCell(selected[0], selected[1]);
+        selectSquare(selected[0], selected[1]);
+      }
+      else{
+        clearCell(selected[0], selected[1]);
+        fillCell(selected[0], selected[1], "*");
+        cur_board[index_y][index_x] = "*";
+        selectSquare(selected[0], selected[1]);
+      }
     }
     else if (key==65){
-      clearCell(selected[0], selected[1]);
-      fillCell(selected[0], selected[1], "X");
-      cur_board[index_y][index_x] = "X";
-      selectSquare(selected[0], selected[1]);
+      if (cur_board[index_y][index_x] == "X"){
+        clearCell(selected[0], selected[1]);
+        selectSquare(selected[0], selected[1]);
+      }
+      else{
+        clearCell(selected[0], selected[1]);
+        fillCell(selected[0], selected[1], "X");
+        cur_board[index_y][index_x] = "X";
+        selectSquare(selected[0], selected[1]);
+      }
     }
     // else if ([1,2,3,4,5,6,7,8,9].includes(num)) {
     //   if (init_board[index]=='_'){
@@ -325,6 +337,25 @@ function clearCell(x, y) {
   // console.log("" + sectorX + ", " + sectorY)
   context.clearRect(x+1, y+1, canvas.width/full_width-2, canvas.height/full_height-2);
   cur_board[index_y][index_x] = '_';
+  for (var i=rows_width; i<full_width; i+=5){
+    // console.log("i: ", i);
+    context.lineWidth = 3;
+    // console.log("line vertical: " + i*canvas.width/full_width);
+    context.strokeStyle = 'black';
+    context.beginPath();
+    context.moveTo(i*canvas.width/full_width, 0);
+    context.lineTo(i*canvas.width/full_width, canvas.height);
+    context.stroke();
+  }
+  for (var i=cols_width; i<full_height; i+=5){
+    context.lineWidth = 3;
+    // console.log("line horizontal: " + i*canvas.height/full_height);
+    context.strokeStyle = 'black';
+    context.beginPath();
+    context.moveTo(0, i*canvas.height/full_height);
+    context.lineTo(canvas.width, i*canvas.height/full_height);
+    context.stroke();
+  }
 }
 
 // function pencilNumber(num, x, y) {
@@ -399,6 +430,25 @@ function unselectSquare(x, y) {
   context.clearRect(x+1, y+1, canvas.width/full_width-2, canvas.height/full_height-2);
   fillCell(selected[0], selected[1], cur_board[index_y][index_x]);
   selected = null;
+  for (var i=rows_width; i<full_width; i+=5){
+    // console.log("i: ", i);
+    context.lineWidth = 3;
+    // console.log("line vertical: " + i*canvas.width/full_width);
+    context.strokeStyle = "black";
+    context.beginPath();
+    context.moveTo(i*canvas.width/full_width, 0);
+    context.lineTo(i*canvas.width/full_width, canvas.height);
+    context.stroke();
+  }
+  for (var i=cols_width; i<full_height; i+=5){
+    context.lineWidth = 3;
+    // console.log("line horizontal: " + i*canvas.height/full_height);
+    context.strokeStyle = "black";
+    context.beginPath();
+    context.moveTo(0, i*canvas.height/full_height);
+    context.lineTo(canvas.width, i*canvas.height/full_height);
+    context.stroke();
+  }
 }
 
 function moveSelected(canvas, key) {
