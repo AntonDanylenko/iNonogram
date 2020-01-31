@@ -134,21 +134,32 @@ document.addEventListener('keydown', function(event) {
   // console.log"KEYPRESS EVENT");
   key = event.keyCode;
   // console.log("Key: " + key);
-  num = parseInt(String.fromCharCode(key));
+  // num = parseInt(String.fromCharCode(key));
   // console.log("Num: " + num);
   // console.log("isNum? "+([1,2,3,4,5,6,7,8,9].includes(num)));
+
   if (selected && unlocked){
-    // console.log("Index: " + index);
+    var index_x = selected[0]*full_width/canvas.width-rows_width;
+    var index_y = selected[1]*full_height/canvas.height-cols_width;
+
     if (37<=key && key<=40){
       moveSelected(canvas, key);
     }
     else if (key==8){
-      if (cur_board[index]=='_') {
-        clearPencilCell(selected[0], selected[1]);
-      }
-      else {
-        clearCell(selected[0], selected[1]);
-      }
+      clearCell(selected[0], selected[1]);
+      selectSquare(selected[0], selected[1]);
+    }
+    else if (key==83){
+      clearCell(selected[0], selected[1]);
+      fillCell(selected[0], selected[1], "*");
+      cur_board[index_y][index_x] = "*";
+      selectSquare(selected[0], selected[1]);
+    }
+    else if (key==65){
+      clearCell(selected[0], selected[1]);
+      fillCell(selected[0], selected[1], "X");
+      cur_board[index_y][index_x] = "X";
+      selectSquare(selected[0], selected[1]);
     }
     // else if ([1,2,3,4,5,6,7,8,9].includes(num)) {
     //   if (init_board[index]=='_'){
@@ -194,6 +205,7 @@ document.addEventListener('keydown', function(event) {
 
 
 
+
 // HELPER FUNCTIONS
 
 
@@ -231,7 +243,7 @@ function getLongest(array){
 function placePermNum(num, cell, index, nums_length, type){
   /* places a number into nonogram board */
   var offset = ((type) ? (rows_width-nums_length)*(canvas.width/full_width) : (cols_width-nums_length)*(canvas.height/full_height));
-  var sub_offset = Math.floor(canvas.width/(full_width*4))
+  var sub_offset = Math.floor(canvas.width/(full_width*4));
   // console.log(sub_offset);
   var sectorX = ((type) ? offset+Math.floor(index*canvas.width/full_width)+sub_offset : Math.floor(cell*canvas.width/full_width)+sub_offset);
   var sectorY = ((type) ? Math.floor(cell*canvas.height/full_height)-sub_offset : offset+Math.floor(index*canvas.height/full_height)-sub_offset);
@@ -292,17 +304,28 @@ function findSector(coord, total, divisor) {
 //   return Math.floor(ind/9)*(canvas.height/9);
 // }
 
-// function clearCell(x, y) {
-//   /* Clears the cell at coordinates x, y */
-//   // console.log("CLEAR CELL");
-//   var sectorX = findSector(x, canvas.width);
-//   var sectorY = findSector(y, canvas.height);
-//   var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
-//   // console.log("" + sectorX + ", " + sectorY)
-//   context.clearRect(sectorX+9, sectorY+9, canvas.width/9-18, canvas.height/9-18);
-//   pencilFullCell(x,y);
-//   cur_board[index] = '_';
-// }
+function fillCell(sectorX, sectorY, type){
+  // console.log("FILL CELL");
+  var sub_offset = Math.floor(canvas.width/(full_width*4));
+  context.fillStyle = "black";
+  if (type=="*"){
+    context.fillRect(sectorX+1, sectorY+1, canvas.width/full_width-2, canvas.height/full_height-2);
+  }
+  else if (type=="X"){
+    context.font = (Math.floor(canvas.height/full_height)-sub_offset).toString() + 'px Arial';
+    context.fillText('X', sectorX+canvas.width/(full_width*5), sectorY+(canvas.height/full_height)-canvas.width/(full_width*5));
+  }
+}
+
+function clearCell(x, y) {
+  /* Clears the cell at coordinates x, y */
+  // console.log("CLEAR CELL");
+  var index_x = selected[0]*full_width/canvas.width-rows_width;
+  var index_y = selected[1]*full_height/canvas.height-cols_width;
+  // console.log("" + sectorX + ", " + sectorY)
+  context.clearRect(x+1, y+1, canvas.width/full_width-2, canvas.height/full_height-2);
+  cur_board[index_y][index_x] = '_';
+}
 
 // function pencilNumber(num, x, y) {
 //   // console.log("PENCIL NUMBER");
@@ -354,6 +377,7 @@ function selectSquare(x, y) {
   var sectorX = findSector(x, canvas.width, full_width);
   var sectorY = findSector(y, canvas.height, full_height);
   var sub_offset = Math.floor(canvas.width/(full_width*6));
+
   // console.log("x: " + x + ", y: " + y);
   // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
   context.lineWidth = 3;
@@ -367,15 +391,13 @@ function unselectSquare(x, y) {
   // console.log("UNSELECT SQUARE");
   var sectorX = findSector(x, canvas.width, full_width);
   var sectorY = findSector(y, canvas.height, full_height);
-  var index = (sectorY*9/canvas.height)*9 + sectorX*9/canvas.width;
   var sub_offset = Math.floor(canvas.width/(full_width*8));
+  var index_x = selected[0]*full_width/canvas.width-rows_width;
+  var index_y = selected[1]*full_height/canvas.height-cols_width;
   // console.log("sectorX: " + sectorX + ", sectorY: " + sectorY);
   // console.log("Index: " + index)
-  context.fillStyle = 'white';
-  context.fillRect(sectorX+sub_offset, sectorY+sub_offset, canvas.width/full_width-2*sub_offset, 2*sub_offset);
-  context.fillRect(sectorX+sub_offset, sectorY+sub_offset, 2*sub_offset, canvas.height/full_height-2*sub_offset);
-  context.fillRect(sectorX+sub_offset, sectorY+canvas.height/full_height-3*sub_offset, canvas.width/full_width-2*sub_offset, 2*sub_offset);
-  context.fillRect(sectorX+canvas.width/full_width-3*sub_offset, sectorY+sub_offset, 2*sub_offset, canvas.height/full_height-2*sub_offset);
+  context.clearRect(x+1, y+1, canvas.width/full_width-2, canvas.height/full_height-2);
+  fillCell(selected[0], selected[1], cur_board[index_y][index_x]);
   selected = null;
 }
 
