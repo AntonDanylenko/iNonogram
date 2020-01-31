@@ -23,6 +23,7 @@ var pauseRef = document.querySelector(".pauseMenu");
 function newGame(){
   selected = null;
   var counts = document.getElementById("puzzle").innerHTML.split("|");
+  // console.log(counts);
   columns = countToArray(counts[0]);
   rows = countToArray(counts[1]);
   // console.log(columns);
@@ -226,19 +227,18 @@ function countToArray(string){
   var index = 0;
   while (index<string.length){
     if (string[index]=="["){
-      var sub = [];
-      index+=1;
-      while (index<string.length && string[index]!="]"){
-        if (string[index]!=","){
-          sub.push(string[index]);
-        }
+      var sub = "";
+      while (string[index]!="]"){
+        sub+=string[index];
         index+=1;
       }
       // console.log(sub);
-      result.push(sub);
+      var sub_array = sub.slice(1).split(",");
+      result.push(sub_array);
     }
     index+=1;
   }
+  // console.log(result);
   return result;
 }
 
@@ -258,6 +258,9 @@ function placePermNum(num, cell, index, nums_length, type){
   var sub_offset = Math.floor(canvas.width/(full_width*4));
   // console.log(sub_offset);
   var sectorX = ((type) ? offset+Math.floor(index*canvas.width/full_width)+sub_offset : Math.floor(cell*canvas.width/full_width)+sub_offset);
+  if (num/10>=1){
+    sectorX-=sub_offset;
+  }
   var sectorY = ((type) ? Math.floor(cell*canvas.height/full_height)-sub_offset : offset+Math.floor(index*canvas.height/full_height)-sub_offset);
   // console.log("" + sectorX + ", " + sectorY);
 
