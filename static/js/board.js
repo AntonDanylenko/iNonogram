@@ -554,18 +554,18 @@ function switchUtensil(button) {
     document.getElementById("pointer").className = "";
   }
   else if (button==2) {
-    utensil=3; // pointer
-    document.getElementById("erase").className = "";
-    document.getElementById("x").className = "";
-    document.getElementById("pencil").className = "";
-    document.getElementById("pointer").className = "active";
-  }
-  else {
     utensil=0; // eraser
     document.getElementById("erase").className = "active";
     document.getElementById("x").className = "";
     document.getElementById("pencil").className = "";
     document.getElementById("pointer").className = "";
+  }
+  else {
+    utensil=3; // pointer
+    document.getElementById("erase").className = "";
+    document.getElementById("x").className = "";
+    document.getElementById("pencil").className = "";
+    document.getElementById("pointer").className = "active";
   }
 }
 
